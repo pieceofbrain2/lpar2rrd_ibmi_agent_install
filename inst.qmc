@@ -39,9 +39,15 @@
    SendKeys "ENDSBS LPAR2RRD *IMMED<Enter>"
    Result = WaitForKbdUnlock()
    WaitForCursor 5,5,2000
+   SendKeys "<PF3>"
+   Result = WaitForKbdUnlock()
    SendKeys "DLTLIB LPAR2RRD<Enter>"
    Result = WaitForKbdUnlock()
+   SendKeys "<PF3>"
+   Result = WaitForKbdUnlock()
    SendKeys "DLTF QGPL/LPAR2RRD<Enter>"
+   Result = WaitForKbdUnlock()
+   SendKeys "<PF3>"
    Result = WaitForKbdUnlock()
    SendKeys "CRTSAVF FILE(QGPL/LPAR2RRD)<Enter>"
    Result = WaitForKbdUnlock()
