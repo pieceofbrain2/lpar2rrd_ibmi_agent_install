@@ -1,0 +1,160 @@
+'------------------------------------------------------------------------------'
+'  Macro created by: Alexey L. Markov markovalexey65@gmail.com                 '
+'  Date: 16 Feb 2019                                                           '
+'  Published at https://github.com/pieceofbrain2/lpar2rrd_ibmi_agent_install   '
+'  on May 15, 2019                                                             '
+'------------------------------------------------------------------------------'
+
+' -------- THE FOLLOWING VALUES ARE SUBJECT TO CHANGE -------------------------------------------
+   HostSettleTime = 6000               ; milliseconds
+   HostUser = "QSECOFR"
+   HostPassword = "password"
+   FTPSite_IP = "10.0.4.3"        ; file path should be: /lpar2rrd/LPAR2RRD.savf (case-sensitive)
+   FTPUser = "ftpuser"
+   FTPPassword = "ftp_password"
+   LPAR2RRD_IP = "10.1.1.10"      ; LPAR2RRD server IP
+' ------------------------------------- NOW YOU CAN RUN -----------------------------------------
+
+   Result = WaitForKbdUnlock()
+   SendKeys HostUser+"<Tab>"+HostPassword+"<Enter>"
+   Result = WaitForKbdUnlock()
+   SendKeys "<Enter>"
+   Result = WaitForKbdUnlock()
+   HostName = getstring(2,72,8)
+   SetWindowTitle HostName
+   SendKeys "<PF3>"
+   Result = WaitForKbdUnlock()
+   SendKeys "CALL QCMD<Enter>"
+   Result = WaitForKbdUnlock()
+   SendKeys "CRTUSRPRF USRPRF(LPAR2RRD) PASSWORD(*NONE) USRCLS(*SECOFR) SPCAUT(*ALLOBJ *AUDIT"
+   Result = WaitForKbdUnlock()
+   SendKeys " *IOSYSCFG *JOBCTL *SAVSYS *SECADM *SERVICE *SPLCTL) PWDEXPITV(*NOMAX) LMTDEVSSN"
+   Result = WaitForKbdUnlock()
+   SendKeys "(*NO)<Enter>"                                                                       
+   Result = WaitForKbdUnlock()
+   Message = trim(getstring(24,2,77))
+   WriteLog
+   SendKeys "<PF3>"
+   Result = WaitForKbdUnlock()
+   SendKeys "ENDSBS LPAR2RRD *IMMED<Enter>"
+   Result = WaitForKbdUnlock()
+   WaitForCursor 5,5,2000
+   SendKeys "DLTLIB LPAR2RRD<Enter>"
+   Result = WaitForKbdUnlock()
+   SendKeys "DLTF QGPL/LPAR2RRD<Enter>"
+   Result = WaitForKbdUnlock()
+   SendKeys "CRTSAVF FILE(QGPL/LPAR2RRD)<Enter>"
+   Result = WaitForKbdUnlock()
+   Message = trim(getstring(24,2,77))
+   WriteLog
+   SendKeys "<PF3>"
+   Result = WaitForKbdUnlock()
+   SendKeys "ftp '"+FTPSite_IP+"'<Enter>"
+   Result = WaitForKbdUnlock()
+   SendKeys FTPUser+"<Enter>"
+   Result = WaitForKbdUnlock()
+   SendKeys FTPPassword+"<Enter>"
+   Result = WaitForKbdUnlock()
+   SendKeys "cd /lpar2rrd<Enter>"
+   Result = WaitForKbdUnlock()
+   SendKeys "bin<Enter>"
+   Result = WaitForKbdUnlock()
+   SendKeys "get LPAR2RRD.savf (replace<Enter>"
+   Result = WaitForKbdUnlock()
+   SendKeys "quit<Enter>"
+   Result = WaitForKbdUnlock()
+   SendKeys "RSTLIB SAVLIB(LPAR2RRD) DEV(*SAVF) SAVF(QGPL/LPAR2RRD) MBROPT(*ALL) ALWOBJDIF(*ALL)<Enter>"
+   Result = WaitForKbdUnlock()
+   Message = trim(getstring(24,2,77))
+   WriteLog
+   SendKeys "<PF3>"
+   Result = WaitForKbdUnlock()
+   SendKeys "CHGJOBD JOBD(LPAR2RRD/LPAR2RRD) JOBQ(LPAR2RRD/LPAR2RRD) TEXT('RTV_SYSSTS')"
+   Result = WaitForKbdUnlock()
+   SendKeys " USER(LPAR2RRD) RQSDTA(*NONE) INLLIBL(LPAR2RRD QGPL QTEMP)<Enter>"
+   Result = WaitForKbdUnlock()
+   Message = trim(getstring(24,2,77))
+   WriteLog
+   SendKeys "<PF3>"
+   Result = WaitForKbdUnlock()
+   SendKeys "CHGUSRPRF USRPRF(LPAR2RRD) JOBD(LPAR2RRD/LPAR2RRD)<Enter>"
+   Result = WaitForKbdUnlock()
+   Message = trim(getstring(24,2,77))
+   WriteLog
+   SendKeys "<PF3>"
+   Result = WaitForKbdUnlock()
+   SendKeys "MKDIR DIR('/home/LPAR2RRD')<Enter>"
+   Result = WaitForKbdUnlock()
+   Message = trim(getstring(24,2,77))
+   WriteLog
+   SendKeys "<PF3>"
+   Result = WaitForKbdUnlock()
+   SendKeys "GRTOBJAUT OBJ(QSYS/QPMLPMGT) OBJTYPE(*SRVPGM) USER(LPAR2RRD) AUT(*use)<Enter>"
+   Result = WaitForKbdUnlock()
+   Message = trim(getstring(24,2,77))
+   WriteLog
+   SendKeys "<PF3>"
+   Result = WaitForKbdUnlock()
+   SendKeys "CHGCMDDFT CMD(LPAR2RRD/RTV_SYSSTS) NEWDFT('IPADR(''"+LPAR2RRD_IP+"'')')<Enter>"
+   Result = WaitForKbdUnlock()
+   Message = trim(getstring(24,2,77))
+   WriteLog
+   SendKeys "<PF3>"
+   Result = WaitForKbdUnlock()
+   SendKeys "CHGUSRPRF USRPRF(LPAR2RRD) PASSWORD(*NONE)<Enter>"
+   Result = WaitForKbdUnlock()
+   Message = trim(getstring(24,2,77))
+   WriteLog
+   SendKeys "<PF3>"
+   Result = WaitForKbdUnlock()
+   SendKeys "ADDLIBLE LPAR2RRD<Enter>"
+   Result = WaitForKbdUnlock()
+   Message = trim(getstring(24,2,77))
+   WriteLog
+   SendKeys "<PF3>"
+   Result = WaitForKbdUnlock()
+   SendKeys "GO MENU<Enter>"
+   Result = WaitForKbdUnlock()
+   Message = "Reading license agreement"
+   WriteLog
+   SendKeys "14<Enter>"
+   Result = WaitForKbdUnlock()
+nextpgdn:
+   SendKeys "<Page Down>"
+   Result = WaitForKbdUnlock()
+   if getstring(23,35,3)="F14" then
+    goto accept
+   endif
+   goto nextpgdn
+accept:
+   Message = "Accepting license agreement"
+   WriteLog
+   SendKeys "<PF14>"
+   Result = WaitForKbdUnlock()
+   SendKeys "<PF3>"
+   Result = WaitForKbdUnlock()
+   SendKeys "CHGJOBD JOBD(LPAR2RRD) TEXT('STRSBS SBSD(LPAR2RRD/LPAR2RRD)') RQSDTA('RTV_SYSSTS')<Enter>"
+   Result = WaitForKbdUnlock()
+   Message = trim(getstring(24,2,77))
+   WriteLog
+   SendKeys "ADDAJE SBSD(LPAR2RRD/LPAR2RRD) JOB(LPAR2RRD) JOBD(LPAR2RRD/LPAR2RRD)<Enter>"
+   Result = WaitForKbdUnlock()
+   Message = trim(getstring(24,2,77))
+   WriteLog
+done:
+   SendKeys "STRSBS LPAR2RRD/LPAR2RRD<Enter>"
+   Result = WaitForKbdUnlock()
+   Message = trim(getstring(24,2,77))
+   WriteLog
+   SendKeys "90<Enter>"
+   Result = WaitForKbdUnlock()
+   Exit Session
+End
+
+Sub WriteLog()
+   Message = trim(Message)
+   open HostName+".install.log" for append as #2
+   myTime = Format(Time$(),"HH:mm:ss")
+   print #2,MyTime+"."+Message
+   close #2
+End Sub
